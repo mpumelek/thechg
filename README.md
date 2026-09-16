@@ -14,7 +14,7 @@ A new, web-first church management platform for one denomination. South Africa i
 | `TheChg.Worker` | Out-of-process jobs, messaging and payment follow-up |
 | `TheChg.*.Tests` | Unit and architecture tests |
 
-The current code is a compilable foundation, **not** a functioning church management system. Authentication, SQL Server persistence, membership, giving, payments, notifications and reporting still require implementation and approval of the relevant policies and providers.
+The current code is a foundation, **not** a functioning church management system. The first South Africa organization model and SQL Server migration exist, but authentication, member management, giving, payments, notifications and reporting still require implementation and approval of the relevant policies and providers. There is deliberately no public organization write endpoint yet.
 
 ## Build
 
@@ -27,6 +27,8 @@ dotnet test TheChg.slnx --no-build
 ```
 
 The Web project uses the standard MVC template and has no production data connection. The Worker is a separate process placeholder and has no live jobs or provider credentials.
+
+For isolated database setup and migration review, see [local development](docs/operations/local-development.md). CI tests use SQLite and synthetic records, not SQL Server or live church data.
 
 ## Planning documents
 

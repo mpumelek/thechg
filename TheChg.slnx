@@ -11,5 +11,6 @@
     <Project Path="tests/TheChg.Application.Tests/TheChg.Application.Tests.csproj" />
     <Project Path="tests/TheChg.Architecture.Tests/TheChg.Architecture.Tests.csproj" />
     <Project Path="tests/TheChg.Domain.Tests/TheChg.Domain.Tests.csproj" />
+    <Project Path="tests/TheChg.Infrastructure.Tests/TheChg.Infrastructure.Tests.csproj" />
   </Folder>
 </Solution>

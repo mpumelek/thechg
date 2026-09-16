@@ -1,8 +1,13 @@
+using TheChg.Infrastructure.Organization;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 builder.Services.AddHealthChecks();
+builder.Services.AddOrganizationPersistence(
+    builder.Configuration.GetConnectionString("ChurchDatabase")
+    ?? throw new InvalidOperationException("ConnectionStrings:ChurchDatabase must be configured."));
 
 var app = builder.Build();
 

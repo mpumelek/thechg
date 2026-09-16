@@ -23,8 +23,8 @@ Every document is a draft unless marked approved by its named owner. Replace `TB
 | Security | [Threat model](security/threat-model.md), [privacy inventory](security/privacy-and-data-inventory.md), [country readiness](security/country-readiness.md) |
 | API/integrations | [API conventions](api/api-conventions.md), [contract draft](api/openapi.yaml), [payments](api/integrations/payments.md), [messaging](api/integrations/messaging.md) |
 | Experience | [UX flows/design system](ux/flows-and-design-system.md), [role guides](training/role-guides.md) |
-| Delivery | [Sprint delivery plan (re-baseline required)](delivery/sprint-delivery-plan.md), [historical S1–S2 record](delivery/s1-s2-execution.md), [historical S3 agent handoff](delivery/s3-agent-handoff.md), [optional legacy data import](delivery/migration-and-cutover.md), [test strategy](delivery/test-strategy.md), [release readiness](delivery/release-readiness.md) |
-| Operations | [Deployment](operations/deployment-runbook.md), [dependency upgrade record](operations/dependency-upgrade-2026-09-16.md), [support](operations/support-runbook.md), [financial procedures](operations/financial-operating-procedures.md), [incident response](operations/incident-response.md), [disaster recovery](operations/disaster-recovery.md) |
+| Delivery | [New-repository Sprint 1](delivery/sprint-1-rebaseline.md), [draft sprint backlog](delivery/sprint-delivery-plan.md), [historical S1–S2 record](delivery/s1-s2-execution.md), [historical S3 agent handoff](delivery/s3-agent-handoff.md), [optional legacy data import](delivery/migration-and-cutover.md), [test strategy](delivery/test-strategy.md), [release readiness](delivery/release-readiness.md) |
+| Operations | [Local development](operations/local-development.md), [deployment](operations/deployment-runbook.md), [historical dependency upgrade record](operations/dependency-upgrade-2026-09-16.md), [support](operations/support-runbook.md), [financial procedures](operations/financial-operating-procedures.md), [incident response](operations/incident-response.md), [disaster recovery](operations/disaster-recovery.md) |
 
 ## Review convention
 

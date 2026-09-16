@@ -7,7 +7,7 @@ This repository is a clean-room start for The CHG church management platform. Do
 - Build for South Africa first. Mozambique is the next planned country; Eswatini and Zimbabwe are future options, not current delivery commitments.
 - One denomination, about 10,000 members and approximately 6,000 giving transactions per month at launch. The target organizational model is denomination → country → circuit → branch.
 - `TheChg.slnx` targets .NET 10. `src/` contains Domain, Contracts, Application, Infrastructure, Web, and Worker projects; `tests/` contains their initial test projects.
-- This is a scaffold, not a production-ready implementation. There is no membership, authentication, payment, database, messaging, or background-job behavior yet.
+- This is not a production-ready implementation. The organization domain, SQL Server EF Core mapping and first migration exist; there is no membership, authentication, payment, messaging, or background-job behavior yet. No organization write endpoint is exposed.
 - [Documentation index](docs/README.md) contains transferred planning drafts. Documents about the previous codebase are historical only. Do not mistake draft OpenAPI, runbooks, or sprint plans for implemented features or approved Church policy.
 
 ## Working rules
@@ -24,4 +24,4 @@ This repository is a clean-room start for The CHG church management platform. Do
 
 ## Initial implementation sequence
 
-Follow the [sprint plan](docs/delivery/sprint-delivery-plan.md), beginning with organizational hierarchy, identity and scoped authorization foundations for South Africa. Establish isolated development configuration and migrations before adding real data flows. Payments, member portal, messaging and country expansion follow their approved dependencies and controls.
+Follow the [new-repository Sprint 1 baseline](docs/delivery/sprint-1-rebaseline.md) and [draft backlog](docs/delivery/sprint-delivery-plan.md). The organization model and isolated migration baseline are first; identity and scoped authorization are next. Payments, member portal, messaging and country expansion follow their approved dependencies and controls.

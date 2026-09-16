@@ -2,7 +2,7 @@
 
 Status: **Transferred draft backlog requiring re-baselining for the new repository**, 16 September 2026. Owner: Product owner; technical lead maintains dependencies; Church, finance, security and information-officer approvals remain with their named owners. This is a forecast, **not** an approved date, budget, SLA, policy or release commitment. The new .NET 10 solution scaffold exists, but product features are not implemented.
 
-The original S1–S2 security, regression and migration stories describe work on the previous repository. They are historical, not instructions to import its code. Re-scope those stories around the clean solution and treat any legacy **data** import as a separately authorized workstream before assigning new sprint dates. The epic order and product outcomes remain planning inputs.
+The original S1–S2 security, regression and migration stories describe work on the previous repository. They are historical, not instructions to import its code. The [new-repository Sprint 1 baseline](sprint-1-rebaseline.md) records the current execution slice. Re-scope older stories around the clean solution and treat any legacy **data** import as a separately authorized workstream before assigning new sprint dates. The epic order and product outcomes remain planning inputs.
 
 **Scope update, 16 September 2026:** the user identified **four long-term countries**—South Africa, Eswatini (Swaziland), Mozambique and Zimbabwe—then clarified **build and pilot for South Africa only now; Mozambique next**. Eswatini/Swaziland and Zimbabwe are unscheduled. The former S24–S25 later-country build/pilot slots are withdrawn pending re-baseline after South Africa evidence; do not interpret S40 as a four-country completion date.
 
