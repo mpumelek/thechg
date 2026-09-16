@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 using TheChg.Infrastructure.Identity;
+using TheChg.Domain.Organization;
 
 namespace TheChg.Infrastructure.Tests.Identity;
 
@@ -29,9 +30,13 @@ public sealed class IdentityPersistenceTests
         await connection.OpenAsync();
         await using var context = new TheChgIdentityDbContext(new DbContextOptionsBuilder<TheChgIdentityDbContext>()
             .UseSqlite(connection).Options);
-        await context.Database.EnsureCreatedAsync();
+        await CreateIsolatedSchemaAsync(context);
 
-        var account = new ApplicationUser(Guid.NewGuid())
+        var churchId = Guid.NewGuid();
+        context.Set<Church>().Add(Church.Create(churchId, "Synthetic Test Church"));
+        await context.SaveChangesAsync();
+
+        var account = new ApplicationUser(churchId)
         {
             UserName = "example@example.test",
             NormalizedUserName = "EXAMPLE@EXAMPLE.TEST",
@@ -55,16 +60,20 @@ public sealed class IdentityPersistenceTests
         await connection.OpenAsync();
         await using var context = new TheChgIdentityDbContext(new DbContextOptionsBuilder<TheChgIdentityDbContext>()
             .UseSqlite(connection).Options);
-        await context.Database.EnsureCreatedAsync();
+        await CreateIsolatedSchemaAsync(context);
 
-        context.Users.Add(new ApplicationUser(Guid.NewGuid())
+        var churchId = Guid.NewGuid();
+        context.Set<Church>().Add(Church.Create(churchId, "Synthetic Test Church"));
+        await context.SaveChangesAsync();
+
+        context.Users.Add(new ApplicationUser(churchId)
         {
             UserName = "first@example.test",
             NormalizedUserName = "DUPLICATE"
         });
         await context.SaveChangesAsync();
 
-        context.Users.Add(new ApplicationUser(Guid.NewGuid())
+        context.Users.Add(new ApplicationUser(churchId)
         {
             UserName = "second@example.test",
             NormalizedUserName = "DUPLICATE"
@@ -79,16 +88,20 @@ public sealed class IdentityPersistenceTests
         await connection.OpenAsync();
         await using var context = new TheChgIdentityDbContext(new DbContextOptionsBuilder<TheChgIdentityDbContext>()
             .UseSqlite(connection).Options);
-        await context.Database.EnsureCreatedAsync();
+        await CreateIsolatedSchemaAsync(context);
 
-        context.Users.Add(new ApplicationUser(Guid.NewGuid())
+        var churchId = Guid.NewGuid();
+        context.Set<Church>().Add(Church.Create(churchId, "Synthetic Test Church"));
+        await context.SaveChangesAsync();
+
+        context.Users.Add(new ApplicationUser(churchId)
         {
             UserName = "first@example.test", NormalizedUserName = "FIRST",
             Email = "same@example.test", NormalizedEmail = "SAME@EXAMPLE.TEST"
         });
         await context.SaveChangesAsync();
 
-        context.Users.Add(new ApplicationUser(Guid.NewGuid())
+        context.Users.Add(new ApplicationUser(churchId)
         {
             UserName = "second@example.test", NormalizedUserName = "SECOND",
             Email = "same@example.test", NormalizedEmail = "SAME@EXAMPLE.TEST"
@@ -103,9 +116,22 @@ public sealed class IdentityPersistenceTests
         await connection.OpenAsync();
         await using var context = new TheChgIdentityDbContext(new DbContextOptionsBuilder<TheChgIdentityDbContext>()
             .UseSqlite(connection).Options);
-        await context.Database.EnsureCreatedAsync();
+        await CreateIsolatedSchemaAsync(context);
 
         context.Users.Add(new ApplicationUser { UserName = "unscoped@example.test" });
+        await Assert.ThrowsAsync<DbUpdateException>(() => context.SaveChangesAsync());
+    }
+
+    [Fact]
+    public async Task Account_with_nonexistent_church_is_rejected_by_the_database()
+    {
+        await using var connection = new SqliteConnection("Data Source=:memory:");
+        await connection.OpenAsync();
+        await using var context = new TheChgIdentityDbContext(new DbContextOptionsBuilder<TheChgIdentityDbContext>()
+            .UseSqlite(connection).Options);
+        await CreateIsolatedSchemaAsync(context);
+
+        context.Users.Add(new ApplicationUser(Guid.NewGuid()) { UserName = "orphan@example.test" });
         await Assert.ThrowsAsync<DbUpdateException>(() => context.SaveChangesAsync());
     }
 
@@ -118,7 +144,9 @@ public sealed class IdentityPersistenceTests
         var tables = context.Model.GetEntityTypes()
             .Select(entity => (entity.GetTableName(), entity.GetSchema()))
             .ToArray();
-        Assert.All(tables, table => Assert.Equal("identity", table.Item2));
+        Assert.All(tables.Where(table => table.Item1 != "Churches"),
+            table => Assert.Equal("identity", table.Item2));
+        Assert.Contains(tables, table => table.Item1 == "Churches" && table.Item2 == "organization");
         Assert.Contains(tables, table => table.Item1 == "Users");
         Assert.Contains(tables, table => table.Item1 == "Roles");
         Assert.Contains(tables, table => table.Item1 == "UserRoles");
@@ -141,5 +169,13 @@ public sealed class IdentityPersistenceTests
         Assert.True(options.SignIn.RequireConfirmedEmail);
         Assert.Equal(5, options.Lockout.MaxFailedAccessAttempts);
         Assert.NotNull(scope.ServiceProvider.GetRequiredService<UserManager<ApplicationUser>>());
+    }
+
+    private static async Task CreateIsolatedSchemaAsync(TheChgIdentityDbContext context)
+    {
+        await context.Database.EnsureCreatedAsync();
+        // Identity references this table but must not own or migrate it. SQLite ignores schemas.
+        await context.Database.ExecuteSqlRawAsync(
+            "CREATE TABLE Churches (Id TEXT NOT NULL PRIMARY KEY, Name TEXT NOT NULL);");
     }
 }

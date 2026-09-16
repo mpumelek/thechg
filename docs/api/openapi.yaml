@@ -2,12 +2,35 @@ openapi: 3.1.0
 info:
   title: Church Platform API — Phase 1 draft
   version: 0.1.0-draft
-  description: Design contract for the membership vertical slice; endpoints are not yet implemented.
+  description: The staff branch-read operation is implemented. Membership operations remain draft and are not exposed.
 servers:
   - url: /api/v1
 security:
   - sessionCookie: []
 paths:
+  /organization/branches/{branchId}:
+    get:
+      operationId: getStaffBranch
+      summary: Read a South African branch within an active staff grant
+      description: Requires Organization.View on the stored branch scope. Unknown and unauthorized IDs both return 403 to avoid an existence probe.
+      parameters:
+        - name: branchId
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+      responses:
+        '200':
+          description: Authorized branch details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/BranchDetails'
+        '401':
+          description: Authentication required
+        '403':
+          description: Permission or scope denied, or branch unavailable
   /me:
     get:
       operationId: getCurrentMember
@@ -123,8 +146,8 @@ components:
     sessionCookie:
       type: apiKey
       in: cookie
-      name: ChurchPlatform.Session
-      description: Illustrative first-party session name; CSRF protection is required for browser writes.
+      name: TheChg.Session
+      description: First-party staff session; CSRF protection is required for browser writes.
   parameters:
     MemberId:
       name: memberId
@@ -134,6 +157,24 @@ components:
         type: string
         format: uuid
   schemas:
+    BranchDetails:
+      type: object
+      additionalProperties: false
+      required: [id, code, name, circuitId, countryCode]
+      properties:
+        id:
+          type: string
+          format: uuid
+        code:
+          type: string
+        name:
+          type: string
+        circuitId:
+          type: string
+          format: uuid
+        countryCode:
+          type: string
+          enum: [ZA]
     RegisterMemberRequest:
       type: object
       additionalProperties: false

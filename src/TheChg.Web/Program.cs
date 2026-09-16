@@ -4,6 +4,9 @@ using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
+using TheChg.Application.Authorization;
+using TheChg.Application.Organization;
+using TheChg.Infrastructure.Authorization;
 using TheChg.Infrastructure.Identity;
 using TheChg.Infrastructure.Organization;
 
@@ -17,9 +20,13 @@ var connectionString = builder.Configuration.GetConnectionString("ChurchDatabase
     ?? throw new InvalidOperationException("ConnectionStrings:ChurchDatabase must be configured.");
 builder.Services.AddOrganizationPersistence(connectionString);
 builder.Services.AddIdentityPersistence(connectionString);
+builder.Services.AddAuthorizationPersistence(connectionString);
+builder.Services.AddScoped<ScopedAuthorizationEvaluator>();
+builder.Services.AddScoped<BranchDetailsService>();
 builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
     .AddCookie(IdentityConstants.ApplicationScheme, options =>
     {
+        options.Cookie.Name = "TheChg.Session";
         options.Cookie.HttpOnly = true;
         options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
         options.Cookie.SameSite = SameSiteMode.Lax;

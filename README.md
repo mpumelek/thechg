@@ -14,7 +14,7 @@ A new, web-first church management platform for one denomination. South Africa i
 | `TheChg.Worker` | Out-of-process jobs, messaging and payment follow-up |
 | `TheChg.*.Tests` | Unit and architecture tests |
 
-The current code is a foundation, **not** a functioning church management system. The South Africa organization model and SQL Server migrations exist, alongside inactive-by-default Identity account storage and a fail-closed scoped authorization evaluator. There is **no login or registration endpoint, member management, persisted permission grant, giving, payment, notification or reporting feature** yet. Organization administration remains closed.
+The current code is a foundation, **not** a functioning church management system. The South Africa organization model, inactive-by-default staff accounts, internal invitation/credential enrollment, persisted dated grants and fail-closed scoped authorization are implemented. A staff sign-in form and one protected read-only branch API exist, but there is **no public registration or invitation activation route, grant administration, member management, giving, payment, notification or reporting feature** yet. Organization administration remains closed.
 
 ## Build
 
@@ -26,7 +26,7 @@ dotnet build TheChg.slnx --no-restore
 dotnet test TheChg.slnx --no-build
 ```
 
-The Web project uses the standard MVC template and has no production data connection. The Worker is a separate process placeholder and has no live jobs or provider credentials.
+The Web project uses the standard MVC template and has no production data connection. The protected staff route is `GET /api/v1/organization/branches/{id}`; it requires an active account and an effective `Organization.View` grant on the stored branch scope. The Worker is a separate process placeholder and has no live jobs or provider credentials.
 
 For isolated database setup and migration review, see [local development](docs/operations/local-development.md). CI tests use SQLite and synthetic records, not SQL Server or live church data. The [Sprint 2 plan](docs/delivery/sprint-2-identity-authorization.md) tracks the remaining identity and authorization work.
 

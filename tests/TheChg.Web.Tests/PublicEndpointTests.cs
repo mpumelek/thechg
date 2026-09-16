@@ -15,6 +15,7 @@ public sealed class PublicEndpointTests(WebApplicationFactory<Program> factory) 
     [Theory]
     [InlineData("/")]
     [InlineData("/health/live")]
+    [InlineData("/Account/Login")]
     public async Task Public_endpoints_are_available_without_a_database_query(string path)
     {
         var response = await factory.CreateClient().GetAsync(path);
@@ -45,5 +46,18 @@ public sealed class PublicEndpointTests(WebApplicationFactory<Program> factory) 
         Assert.True(options.Cookie.HttpOnly);
         Assert.Equal(CookieSecurePolicy.Always, options.Cookie.SecurePolicy);
         Assert.False(options.SlidingExpiration);
+    }
+
+    [Fact]
+    public async Task Login_post_without_antiforgery_token_is_rejected()
+    {
+        var response = await factory.CreateClient().PostAsync("/Account/Login",
+            new FormUrlEncodedContent(new Dictionary<string, string>
+            {
+                ["Email"] = "synthetic@example.test",
+                ["Password"] = "NotARealPassword1!"
+            }));
+
+        Assert.Equal(System.Net.HttpStatusCode.BadRequest, response.StatusCode);
     }
 }
