@@ -14,7 +14,7 @@ A new, web-first church management platform for one denomination. South Africa i
 | `TheChg.Worker` | Out-of-process jobs, messaging and payment follow-up |
 | `TheChg.*.Tests` | Unit and architecture tests |
 
-The current code is a foundation, **not** a functioning church management system. The first South Africa organization model and SQL Server migration exist, but authentication, member management, giving, payments, notifications and reporting still require implementation and approval of the relevant policies and providers. There is deliberately no public organization write endpoint yet.
+The current code is a foundation, **not** a functioning church management system. The South Africa organization model and SQL Server migrations exist, alongside inactive-by-default Identity account storage and a fail-closed scoped authorization evaluator. There is **no login or registration endpoint, member management, persisted permission grant, giving, payment, notification or reporting feature** yet. Organization administration remains closed.
 
 ## Build
 
@@ -28,7 +28,7 @@ dotnet test TheChg.slnx --no-build
 
 The Web project uses the standard MVC template and has no production data connection. The Worker is a separate process placeholder and has no live jobs or provider credentials.
 
-For isolated database setup and migration review, see [local development](docs/operations/local-development.md). CI tests use SQLite and synthetic records, not SQL Server or live church data.
+For isolated database setup and migration review, see [local development](docs/operations/local-development.md). CI tests use SQLite and synthetic records, not SQL Server or live church data. The [Sprint 2 plan](docs/delivery/sprint-2-identity-authorization.md) tracks the remaining identity and authorization work.
 
 ## Planning documents
 

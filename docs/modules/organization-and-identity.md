@@ -1,6 +1,6 @@
 # Organization and identity module specification
 
-Status: Draft specification; **organization creation and persistence partially implemented**, identity not implemented. Owners: Organization lead and security architect. Related: [permissions](../architecture/permissions-matrix.md), [ADR 0002](../adr/0002-church-id.md), [ADR 0003](../adr/0003-identity-and-scoped-authorization.md).
+Status: Draft specification; **organization, inactive account persistence and authorization evaluation partially implemented**. Login, invitations, grant persistence, administration and audit are not implemented. Owners: Organization lead and security architect. Related: [permissions](../architecture/permissions-matrix.md), [ADR 0002](../adr/0002-church-id.md), [ADR 0003](../adr/0003-identity-and-scoped-authorization.md).
 
 ## Organization
 
