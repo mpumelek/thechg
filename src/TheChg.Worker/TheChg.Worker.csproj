@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net10.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-TheChg.Worker-a215f4fc-a404-4312-9184-e15154e110fc</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.12" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\TheChg.Application\TheChg.Application.csproj" />
+    <ProjectReference Include="..\TheChg.Infrastructure\TheChg.Infrastructure.csproj" />
+  </ItemGroup>
+</Project>

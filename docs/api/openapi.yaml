@@ -1,0 +1,225 @@
+openapi: 3.1.0
+info:
+  title: Church Platform API — Phase 1 draft
+  version: 0.1.0-draft
+  description: Design contract for the membership vertical slice; endpoints are not yet implemented.
+servers:
+  - url: /api/v1
+security:
+  - sessionCookie: []
+paths:
+  /me:
+    get:
+      operationId: getCurrentMember
+      summary: Read the authenticated member's permitted profile
+      responses:
+        '200':
+          description: Linked member profile
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberSummary'
+        '401':
+          $ref: '#/components/responses/Unauthorized'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /members:
+    post:
+      operationId: registerMember
+      summary: Create a draft member in an authorized branch
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterMemberRequest'
+      responses:
+        '201':
+          description: Draft created
+          headers:
+            Location:
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberSummary'
+        '400':
+          $ref: '#/components/responses/BadRequest'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /members/{memberId}:
+    get:
+      operationId: getMember
+      summary: Read a member within authorized scope
+      parameters:
+        - $ref: '#/components/parameters/MemberId'
+      responses:
+        '200':
+          description: Member summary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MemberSummary'
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '404':
+          $ref: '#/components/responses/NotFound'
+  /members/{memberId}/submit:
+    post:
+      operationId: submitMembershipApplication
+      summary: Submit a draft registration for leadership approval
+      parameters:
+        - $ref: '#/components/parameters/MemberId'
+      responses:
+        '204':
+          description: Submitted
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /members/{memberId}/approve:
+    post:
+      operationId: approveMembershipApplication
+      summary: Approve a pending application
+      parameters:
+        - $ref: '#/components/parameters/MemberId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecisionRequest'
+      responses:
+        '204':
+          description: Approved
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+  /members/{memberId}/reject:
+    post:
+      operationId: rejectMembershipApplication
+      summary: Reject a pending application with reason
+      parameters:
+        - $ref: '#/components/parameters/MemberId'
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DecisionRequest'
+      responses:
+        '204':
+          description: Rejected
+        '403':
+          $ref: '#/components/responses/Forbidden'
+        '409':
+          $ref: '#/components/responses/Conflict'
+components:
+  securitySchemes:
+    sessionCookie:
+      type: apiKey
+      in: cookie
+      name: ChurchPlatform.Session
+      description: Illustrative first-party session name; CSRF protection is required for browser writes.
+  parameters:
+    MemberId:
+      name: memberId
+      in: path
+      required: true
+      schema:
+        type: string
+        format: uuid
+  schemas:
+    RegisterMemberRequest:
+      type: object
+      additionalProperties: false
+      required: [branchId, firstName, lastName]
+      properties:
+        branchId:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+          minLength: 1
+          maxLength: 150
+        lastName:
+          type: string
+          minLength: 1
+          maxLength: 150
+        phoneNumber:
+          type: string
+          maxLength: 40
+    MemberSummary:
+      type: object
+      required: [id, branchId, firstName, lastName, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        branchId:
+          type: string
+          format: uuid
+        firstName:
+          type: string
+        lastName:
+          type: string
+        status:
+          type: string
+          enum: [Draft, PendingApproval, Approved, PreActive, Active, Rejected, Suspended, Inactive, Archived]
+    DecisionRequest:
+      type: object
+      additionalProperties: false
+      required: [reason]
+      properties:
+        reason:
+          type: string
+          minLength: 1
+          maxLength: 1000
+    Problem:
+      type: object
+      properties:
+        type:
+          type: string
+        title:
+          type: string
+        status:
+          type: integer
+        code:
+          type: string
+        traceId:
+          type: string
+  responses:
+    BadRequest:
+      description: Invalid request
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Unauthorized:
+      description: Authentication required
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Forbidden:
+      description: Permission or scope denied
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    NotFound:
+      description: Resource not found
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'
+    Conflict:
+      description: Invalid transition or concurrency conflict
+      content:
+        application/problem+json:
+          schema:
+            $ref: '#/components/schemas/Problem'

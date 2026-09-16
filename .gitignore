@@ -1,0 +1,16 @@
+**/bin/
+**/obj/
+.vs/
+.vscode/
+*.user
+*.suo
+TestResults/
+*.coverage
+*.coveragexml
+coverage/
+.env
+.env.*
+!*.example
+appsettings.Local.json
+appsettings.Production.json
+secrets.json

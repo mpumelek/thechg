@@ -1,0 +1,15 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/TheChg.Application/TheChg.Application.csproj" />
+    <Project Path="src/TheChg.Contracts/TheChg.Contracts.csproj" />
+    <Project Path="src/TheChg.Domain/TheChg.Domain.csproj" />
+    <Project Path="src/TheChg.Infrastructure/TheChg.Infrastructure.csproj" />
+    <Project Path="src/TheChg.Web/TheChg.Web.csproj" />
+    <Project Path="src/TheChg.Worker/TheChg.Worker.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/TheChg.Application.Tests/TheChg.Application.Tests.csproj" />
+    <Project Path="tests/TheChg.Architecture.Tests/TheChg.Architecture.Tests.csproj" />
+    <Project Path="tests/TheChg.Domain.Tests/TheChg.Domain.Tests.csproj" />
+  </Folder>
+</Solution>
