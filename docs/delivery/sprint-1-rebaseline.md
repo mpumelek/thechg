@@ -1,6 +1,6 @@
 # New-repository Sprint 1: organizational foundation
 
-Status: engineering baseline implemented locally, 16 September 2026; Church policy and release gates remain open. This supersedes the old S1–S2 execution assumptions, not the product backlog or the Church's approval gates. Scope is South Africa only. No old source code or live data is imported.
+Status: engineering baseline implemented and [first GitHub CI run passed](https://github.com/mpumelek/thechg/actions/runs/35125561701), 16 September 2026; Church policy and release gates remain open. This supersedes the old S1–S2 execution assumptions, not the product backlog or the Church's approval gates. Scope is South Africa only. No old source code or live data is imported.
 
 ## Sprint outcome
 
@@ -16,7 +16,7 @@ A clean, buildable .NET 10 solution has repeatable CI, a SQL Server organization
 | Development setup | LocalDB-only example connection on Windows; other environments inject `ConnectionStrings__ChurchDatabase`. No automatic migration or production seed. |
 | Security boundary | No administrative API or UI is enabled before identity, scoped grants and auditing are implemented. |
 
-The transferred story IDs map to this new baseline as follows. `E02-01` (build/test CI) and the solution-boundary portion of `E02-02` are implemented locally; GitHub must still report its first CI run. `E03-01` is partial: the hierarchy and database guards exist, but authorized administration, audit and approval of the real Church registry remain. The old `E01-02`, `E01-03` and `E03-03` legacy-code/data tasks are not carried forward as application-code work. Any credential rotation or data import for the old system requires its own authorized workstream.
+The transferred story IDs map to this new baseline as follows. `E02-01` (build/test CI) and the solution-boundary portion of `E02-02` are implemented and verified by the first GitHub run. `E03-01` is partial: the hierarchy and database guards exist, but authorized administration, audit and approval of the real Church registry remain. The old `E01-02`, `E01-03` and `E03-03` legacy-code/data tasks are not carried forward as application-code work. Any credential rotation or data import for the old system requires its own authorized workstream.
 
 ## Out of scope and next sprint
 
