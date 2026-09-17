@@ -8,7 +8,7 @@ namespace TheChg.Infrastructure.Identity;
 public sealed class TheChgIdentityDbContext(DbContextOptions<TheChgIdentityDbContext> options)
     : IdentityDbContext<ApplicationUser, IdentityRole<Guid>, Guid>(options)
 {
-    public DbSet<AccountInvitation> Invitations => Set<AccountInvitation>();
+    public DbSet<BranchAccountRegistration> BranchAccountRegistrations => Set<BranchAccountRegistration>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -21,6 +21,13 @@ public sealed class TheChgIdentityDbContext(DbContextOptions<TheChgIdentityDbCon
             entity.HasKey(church => church.Id);
             entity.Property(church => church.Id).ValueGeneratedNever();
             entity.Property(church => church.Name).HasMaxLength(200).IsRequired();
+        });
+
+        modelBuilder.Entity<OrganizationUnit>(entity =>
+        {
+            entity.ToTable("OrganizationalUnits", "organization", table => table.ExcludeFromMigrations());
+            entity.HasKey(unit => unit.Id);
+            entity.HasAlternateKey(unit => new { unit.ChurchId, unit.Id });
         });
 
         modelBuilder.Entity<ApplicationUser>(entity =>
@@ -37,23 +44,29 @@ public sealed class TheChgIdentityDbContext(DbContextOptions<TheChgIdentityDbCon
                 .IsUnique().HasFilter("[NormalizedEmail] IS NOT NULL");
         });
 
-        modelBuilder.Entity<AccountInvitation>(entity =>
+        modelBuilder.Entity<BranchAccountRegistration>(entity =>
         {
-            entity.ToTable("AccountInvitations", "identity", table =>
-            {
-                table.HasCheckConstraint("CK_AccountInvitation_Expiry", "[ExpiresAt] > '2000-01-01'");
-            });
-            entity.HasKey(invitation => invitation.Id);
-            entity.Property(invitation => invitation.Id).ValueGeneratedNever();
-            entity.Property(invitation => invitation.NormalizedDestination).HasMaxLength(256).IsRequired();
-            entity.Property(invitation => invitation.TokenHash).HasMaxLength(64).IsRequired();
-            entity.HasIndex(invitation => invitation.TokenHash).IsUnique();
-            entity.HasIndex(invitation => new { invitation.UserId, invitation.ConsumedAt });
+            entity.ToTable("BranchAccountRegistrations", "identity", table =>
+                table.HasCheckConstraint("CK_BranchAccountRegistration_Kind", "[Kind] IN (1, 2)"));
+            entity.HasKey(registration => registration.Id);
+            entity.Property(registration => registration.Id).ValueGeneratedNever();
+            entity.Property(registration => registration.Kind).HasConversion<int>().IsRequired();
+            entity.Property(registration => registration.CapturedAt).IsRequired();
+            entity.HasIndex(registration => registration.AccountId).IsUnique();
+            entity.HasIndex(registration => new { registration.ChurchId, registration.BranchId });
             entity.HasOne<ApplicationUser>().WithMany()
-                .HasForeignKey(invitation => new { invitation.ChurchId, invitation.UserId })
+                .HasForeignKey(registration => new { registration.ChurchId, registration.AccountId })
                 .HasPrincipalKey(user => new { user.ChurchId, user.Id })
                 .OnDelete(DeleteBehavior.Restrict);
-            entity.HasOne<Church>().WithMany().HasForeignKey(invitation => invitation.ChurchId)
+            entity.HasOne<ApplicationUser>().WithMany()
+                .HasForeignKey(registration => new { registration.ChurchId, registration.RegistrarId })
+                .HasPrincipalKey(user => new { user.ChurchId, user.Id })
+                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne<Church>().WithMany().HasForeignKey(registration => registration.ChurchId)
+                .OnDelete(DeleteBehavior.Restrict);
+            entity.HasOne<OrganizationUnit>().WithMany()
+                .HasForeignKey(registration => new { registration.ChurchId, registration.BranchId })
+                .HasPrincipalKey(unit => new { unit.ChurchId, unit.Id })
                 .OnDelete(DeleteBehavior.Restrict);
         });
 

@@ -2,12 +2,55 @@ openapi: 3.1.0
 info:
   title: Church Platform API — Phase 1 draft
   version: 0.1.0-draft
-  description: The staff branch-read operation is implemented. Membership operations remain draft and are not exposed.
+  description: Staff branch-read and branch account-request capture are implemented. Official membership operations remain draft and are not exposed.
 servers:
   - url: /api/v1
 security:
   - sessionCookie: []
 paths:
+  /security/antiforgery:
+    get:
+      operationId: getAntiforgeryToken
+      summary: Obtain a request token for authenticated browser JSON writes
+      responses:
+        '200':
+          description: Request token; also sets an HttpOnly antiforgery cookie
+          content:
+            application/json:
+              schema:
+                type: object
+                required: [requestToken]
+                properties:
+                  requestToken:
+                    type: string
+        '401':
+          description: Authentication required
+  /registrations/accounts:
+    post:
+      operationId: captureBranchAccountRegistration
+      summary: Record a pending staff or member account request at an authorized South African branch
+      description: Requires Member.Create for kind Member or Staff.Register for kind Staff at the stored branch. Browser clients first obtain a request token from /security/antiforgery and send it in X-CSRF-TOKEN. Does not create official membership, set credentials, activate an account or grant permissions.
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CaptureAccountRegistrationRequest'
+      responses:
+        '201':
+          description: Pending account request captured
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PendingAccountRegistration'
+        '400':
+          description: Invalid request or missing antiforgery token
+        '401':
+          description: Authentication required
+        '403':
+          description: Permission or branch scope denied
+        '409':
+          description: Account already exists for the email address
   /organization/branches/{branchId}:
     get:
       operationId: getStaffBranch
@@ -157,6 +200,41 @@ components:
         type: string
         format: uuid
   schemas:
+    CaptureAccountRegistrationRequest:
+      type: object
+      additionalProperties: false
+      required: [branchId, kind, email]
+      properties:
+        branchId:
+          type: string
+          format: uuid
+        kind:
+          type: string
+          enum: [Member, Staff]
+        email:
+          type: string
+          format: email
+          maxLength: 256
+    PendingAccountRegistration:
+      type: object
+      additionalProperties: false
+      required: [id, accountId, branchId, kind, status]
+      properties:
+        id:
+          type: string
+          format: uuid
+        accountId:
+          type: string
+          format: uuid
+        branchId:
+          type: string
+          format: uuid
+        kind:
+          type: string
+          enum: [Member, Staff]
+        status:
+          type: string
+          enum: [PendingReview]
     BranchDetails:
       type: object
       additionalProperties: false

@@ -14,7 +14,7 @@ Required invariants: authorized branch administrator creates record; one open ap
 
 ## Member portal
 
-An approved person may be invited to an account after identity verification. Link `ApplicationUser` and `Member` explicitly. Read own profile by server-side link, not by caller-selected ID. Controlled fields such as legal name, date of birth, branch, status and guardian link use change requests. Household visibility is not granted automatically; see `DEC-005`.
+An approved person may establish an account privately at a branch after identity verification; no invitation is used. Link `ApplicationUser` and `Member` explicitly. A pending account request is not official membership. Read own profile by server-side link, not by caller-selected ID. Controlled fields such as legal name, date of birth, branch, status and guardian link use change requests. Household visibility is not granted automatically; see `DEC-005`.
 
 ## Events, audit and acceptance
 

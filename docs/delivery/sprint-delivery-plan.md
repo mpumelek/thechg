@@ -1,6 +1,6 @@
 # Proposed epic backlog and sprint delivery sequence
 
-Status: **Transferred draft backlog requiring re-baselining for the new repository**, 16 September 2026. Owner: Product owner; technical lead maintains dependencies; Church, finance, security and information-officer approvals remain with their named owners. This is a forecast, **not** an approved date, budget, SLA, policy or release commitment. The new .NET 10 solution scaffold exists, but product features are not implemented.
+Status: **Transferred draft backlog requiring re-baselining for the new repository**, updated 17 September 2026 for branch-led registration. Owner: Product owner; technical lead maintains dependencies; Church, finance, security and information-officer approvals remain with their named owners. This is a forecast, **not** an approved date, budget, SLA, policy or release commitment. The .NET 10 foundation, scoped branch read and pending branch account capture exist, but official member/staff onboarding and other product workflows are not complete.
 
 The original S1–S2 security, regression and migration stories describe work on the previous repository. They are historical, not instructions to import its code. The [new-repository Sprint 1 baseline](sprint-1-rebaseline.md) records the current execution slice. Re-scope older stories around the clean solution and treat any legacy **data** import as a separately authorized workstream before assigning new sprint dates. The epic order and product outcomes remain planning inputs.
 
@@ -27,7 +27,7 @@ The original S1–S2 security, regression and migration stories describe work on
 | 7 | E07 New-member journey | P1 | Versioned curriculum and evidence-based activation. Depends on E05 and Church policy. |
 | 8 | E08 Manual giving | P1 | Immutable, scoped and currency-aware contribution ledger. Depends on E03–E04. |
 | 9 | E09 Online payments | P1 | Verified provider events, reconciliation and country adapters. Depends on E08, E02 outbox and finance decisions. |
-| 10 | E10 Communications | P1 | Consent-aware email, SMS and WhatsApp through outbox/provider adapters. Invitations and receipts depend on it. |
+| 10 | E10 Communications | P1 | Consent-aware email, SMS and WhatsApp through outbox/provider adapters. Service messages and receipts depend on it; registration does not use invitations. |
 | 11 | E11 Offline branch capture | P1 | Device-scoped queue, idempotent sync and visible recovery. Depends on E08 and device policy. |
 | 12 | E12 Legacy migration and country rollout | P0 | Rehearsed mapping, finance reconciliation, UAT and staged country cutovers. Depends on all applicable release gates. |
 | 13 | E13 Private documents and approvals | P1/P2 | Authorized storage and downloads first; generalized approval coordination later. |
@@ -59,7 +59,7 @@ Each story ID is stable for issue tracking. The sprint is a forecast slot, not a
 | E03-01 | S3 | `ChurchId` and country/circuit/branch model reject cycles, invalid parents and orphaning; build/configure for South Africa only while keeping the schema country-neutral for later expansion. |
 | E03-02 | S4 | Country timezone/currency and effective-dated leadership settings work; circuit/branch descendant rules pass tests. |
 | E03-03 | S4 | Legacy circuit/branch crosswalk maps source IDs to target units; unmapped/duplicate rows are reported, never silently assigned. |
-| E04-01 | S5 | `ApplicationUser` is distinct from `Member`; verified, expiring invitation and account link cannot create official membership. |
+| E04-01 | S5 | `ApplicationUser` is distinct from `Member`; authorized branch capture creates only a pending account request, and a verified account link cannot create official membership. No invitations. |
 | E04-02 | S5 | Permission catalogue and dated role assignments enforce Church, country, circuit, branch and descendant scope; delegation cannot widen the grantor's authority. |
 | E04-03 | S6 | Resource authorization rejects guessed IDs, sibling branches, unrelated members and protected records on server reads/writes and exports. |
 | E04-04 | S6 | Privileged MFA, recovery and account/assignment revocation work; revoked access fails within the agreed session window and is audited. |
@@ -73,7 +73,7 @@ Each story ID is stable for issue tracking. The sprint is a forecast slot, not a
 
 | Story | Sprint | User outcome / minimum acceptance evidence |
 |---|---:|---|
-| E06-01 | S9 | Invited approved member signs in and sees only their own permitted profile resolved from account link; substituted member ID is denied. |
+| E06-01 | S9 | Branch-registered approved member privately establishes credentials and sees only their own permitted profile resolved from account link; substituted member ID is denied. |
 | E06-02 | S14 | Member sees only their own posted giving, original currency, corrections and receipt status; no household access by inference. |
 | E06-03 | S10 | Member submits controlled profile change and sees status; protected fields change only after scoped decision and audit. |
 | E06-04 | S20 | Member downloads only own permitted private documents; expired links and another member's document are denied. |
@@ -92,7 +92,7 @@ Each story ID is stable for issue tracking. The sprint is a forecast slot, not a
 | E09-06 | Unscheduled | Third-country gateway, currency, receipts and settlement mapping pass equivalent review and tests before online launch; country order remains open. |
 | E09-07 | Unscheduled | Fourth-country gateway, currency, receipts and settlement mapping pass its own finance/legal review and contract tests before online launch. |
 | E10-01 | S8 | Purpose/channel-specific templates, consent and suppression rules prevent unapproved or out-of-scope messages. |
-| E10-02 | S9 | Email/SMS adapters send invitations and service messages from outbox; retries/dead letters do not roll back membership decisions. |
+| E10-02 | S9 | Email/SMS adapters send consent-aware service messages from outbox; retries/dead letters do not roll back membership decisions. Registration does not depend on messaging. |
 | E10-03 | S17 | WhatsApp adapter uses approved provider/templates/consent rules; delivery status, failure and suppression are tested. |
 | E10-04 | S29 | Authorized bulk campaign preview, audience snapshot, approval/cancel window and opt-out prevent cross-scope sends. |
 | E11-01 | S18 | Registered device holds minimal encrypted offline operations with unique client IDs and visible pending count after restart. |
@@ -151,11 +151,11 @@ An exit statement is a demo/test outcome, not permission to deploy. Production g
 | S2 | E01-03/04, E12-01 | Dangerous routes denied; source inventory and privacy questions known. **Gate G0:** no unowned critical risk. |
 | S3 | E02-02, E03-01 | Modular conventions and org hierarchy compile with migration/architecture tests. |
 | S4 | E02-03, E03-02/03 | Staging/restore POC and organization crosswalk demonstrated. |
-| S5 | E04-01/02 | Invite/link model and scoped grants tested. |
+| S5 | E04-01/02 | Branch-captured pending account/link model and scoped grants tested. |
 | S6 | E04-03/04 | Cross-branch/member denial, MFA and revocation tested. |
 | S7 | E02-04, E05-01/02 | Branch admin can create a draft; outbox worker retries independently. |
 | S8 | E05-03/04, E10-01 | Approval/rejection and activation guard tested; messaging rules ready. |
-| S9 | E10-02, E06-01 | Approve → invite → login → own profile works. **Gate G1:** internal vertical-slice UAT. |
+| S9 | E10-02, E06-01 | Branch register → approve → private credential setup → login → own profile works. **Gate G1:** internal vertical-slice UAT. |
 | S10 | E05-05, E06-03, E12-02 | Transfer/change requests preserve history; migration mapping reviewed. |
 | S11 | E07-01/02 | Published curriculum and progress evidence demonstrated. |
 | S12 | E07-03 | Completion/exception activates only eligible member. **Gate G2:** membership-policy sign-off. |

@@ -11,7 +11,7 @@ Use `REQ-<domain>-<number>` as a stable ID. A story is ready only when actor, sc
 | ID | Requirement | Acceptance evidence |
 |---|---|---|
 | REQ-ORG-001 | Manage country → circuit → branch hierarchy with effective leadership assignments | New branch can be created without schema change; sibling branch records remain inaccessible |
-| REQ-IAM-001 | Invite users and assign permissions at a defined organization scope | Invite expires; revoked assignment removes access; privileged MFA enforced |
+| REQ-IAM-001 | Capture all staff and member registrations in person at authorized branches; assign staff permissions only after separate approval | No invitations or public self-registration; capture remains pending; revoked assignment removes access; privileged MFA enforced |
 | REQ-MEM-001 | Only an authorized branch administrator registers an official member | Anonymous/member self-registration cannot create a member; audit records actor and branch |
 | REQ-MEM-002 | Submit, approve, reject, resubmit, suspend, reactivate and archive with explicit state rules | Invalid transitions return conflict; every decision records actor, reason and timestamp |
 | REQ-MEM-003 | Prevent member becoming active before required approval and journey completion or recorded exception | Domain and API tests cover both paths |

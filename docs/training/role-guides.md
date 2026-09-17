@@ -20,7 +20,7 @@ Use only explicitly assigned cases; keep notes factual and minimal; respect clas
 
 ## Member
 
-Accept invitation, secure account, view own profile/journey/giving, request controlled changes, manage communication preferences and report an error. Household access is not assumed. Online giving receipts may remain pending until provider confirmation.
+Register in person at a branch, privately secure the account after approval, view own profile/journey/giving, request controlled changes, manage communication preferences and report an error. Household access is not assumed. Online giving receipts may remain pending until provider confirmation.
 
 ## Training rollout
 

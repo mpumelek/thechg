@@ -1,4 +1,5 @@
 using System.Net;
+using System.Net.Http.Json;
 using System.Security.Claims;
 using System.Text.Encodings.Web;
 using System.Text.Json;
@@ -11,6 +12,7 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using TheChg.Application.Authorization;
 using TheChg.Application.Organization;
+using TheChg.Application.Registration;
 using TheChg.Domain.Organization;
 
 namespace TheChg.Web.Tests.Security;
@@ -154,6 +156,35 @@ public sealed class BranchEndpointSecurityTests
         await AssertNoBranchDataAsync(sibling, fixture.BranchB);
     }
 
+    [Fact]
+    public async Task Branch_account_capture_requires_a_matching_kind_and_branch_grant()
+    {
+        using var fixture = new Fixture();
+        fixture.Grants.Add(fixture.Grant(fixture.BranchA.Id) with { Permission = "Member.Create" });
+
+        var allowed = await fixture.PostRegistrationAsync(fixture.BranchA.Id, "Member");
+        var staff = await fixture.PostRegistrationAsync(fixture.BranchA.Id, "Staff");
+        var sibling = await fixture.PostRegistrationAsync(fixture.BranchB.Id, "Member");
+
+        Assert.Equal(HttpStatusCode.Created, allowed.StatusCode);
+        Assert.Contains("PendingReview", await allowed.Content.ReadAsStringAsync());
+        Assert.Equal(HttpStatusCode.Forbidden, staff.StatusCode);
+        Assert.Equal(HttpStatusCode.Forbidden, sibling.StatusCode);
+        Assert.Equal(1, fixture.RegistrationWrites);
+    }
+
+    [Fact]
+    public async Task Branch_account_capture_without_antiforgery_token_is_rejected()
+    {
+        using var fixture = new Fixture();
+        fixture.Grants.Add(fixture.Grant(fixture.BranchA.Id) with { Permission = "Member.Create" });
+
+        var response = await fixture.PostRegistrationAsync(fixture.BranchA.Id, "Member", includeToken: false);
+
+        Assert.Equal(HttpStatusCode.BadRequest, response.StatusCode);
+        Assert.Equal(0, fixture.RegistrationWrites);
+    }
+
     private static async Task AssertNoBranchDataAsync(HttpResponseMessage response, OrganizationUnit branch)
     {
         var body = await response.Content.ReadAsStringAsync();
@@ -164,7 +195,7 @@ public sealed class BranchEndpointSecurityTests
     }
 
     private sealed class Fixture : IDisposable, IOrganizationRepository, IAccessAccountReader,
-        IPermissionGrantReader, IOrganizationAncestryReader
+        IPermissionGrantReader, IOrganizationAncestryReader, IAccountRegistrationWriter
     {
         private readonly WebApplicationFactory<Program> _factory;
         private readonly HttpClient _client;
@@ -189,11 +220,13 @@ public sealed class BranchEndpointSecurityTests
                     services.RemoveAll<IAccessAccountReader>();
                     services.RemoveAll<IPermissionGrantReader>();
                     services.RemoveAll<IOrganizationAncestryReader>();
+                    services.RemoveAll<IAccountRegistrationWriter>();
                     services.RemoveAll<TimeProvider>();
                     services.AddSingleton<IOrganizationRepository>(this);
                     services.AddSingleton<IAccessAccountReader>(this);
                     services.AddSingleton<IPermissionGrantReader>(this);
                     services.AddSingleton<IOrganizationAncestryReader>(this);
+                    services.AddSingleton<IAccountRegistrationWriter>(this);
                     services.AddSingleton<TimeProvider>(new FixedClock());
                     services.AddAuthentication(options =>
                         {
@@ -217,6 +250,7 @@ public sealed class BranchEndpointSecurityTests
         public OrganizationUnit BranchB { get; }
         public AccessAccount Account { get; set; }
         public List<PermissionGrant> Grants { get; } = [];
+        public int RegistrationWrites { get; private set; }
 
         public PermissionGrant Grant(Guid? scopeId) =>
             new(_accountId, _church.Id, "Organization.View", scopeId, false, Now.AddDays(-1), null);
@@ -227,6 +261,38 @@ public sealed class BranchEndpointSecurityTests
             if (authenticated)
                 request.Headers.Add(SyntheticAuthenticationHandler.AccountHeader, _accountId.ToString());
             return _client.SendAsync(request);
+        }
+
+        public async Task<HttpResponseMessage> PostRegistrationAsync(Guid branchId, string kind,
+            bool includeToken = true)
+        {
+            string? token = null;
+            if (includeToken)
+            {
+                using var tokenRequest = new HttpRequestMessage(HttpMethod.Get, "/api/v1/security/antiforgery");
+                tokenRequest.Headers.Add(SyntheticAuthenticationHandler.AccountHeader, _accountId.ToString());
+                using var tokenResponse = await _client.SendAsync(tokenRequest);
+                tokenResponse.EnsureSuccessStatusCode();
+                using var body = JsonDocument.Parse(await tokenResponse.Content.ReadAsStringAsync());
+                token = body.RootElement.GetProperty("requestToken").GetString();
+            }
+
+            using var request = new HttpRequestMessage(HttpMethod.Post, "/api/v1/registrations/accounts");
+            request.Headers.Add(SyntheticAuthenticationHandler.AccountHeader, _accountId.ToString());
+            if (token is not null)
+                request.Headers.Add("X-CSRF-TOKEN", token);
+            request.Content = JsonContent.Create(new
+            {
+                branchId, kind, email = "synthetic.person@example.test"
+            });
+            return await _client.SendAsync(request);
+        }
+
+        public Task<PendingAccountRegistration> CreatePendingAsync(Guid registrarId, Guid churchId,
+            Guid branchId, BranchAccountKind kind, string email, CancellationToken cancellationToken)
+        {
+            RegistrationWrites++;
+            return Task.FromResult(new PendingAccountRegistration(Guid.NewGuid(), Guid.NewGuid(), branchId, kind));
         }
 
         public Task<AccessAccount?> FindAsync(Guid accountId, CancellationToken cancellationToken) =>

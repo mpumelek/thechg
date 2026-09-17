@@ -4,7 +4,7 @@ Status: Draft. Owners: Church sponsor and product owner. Approval: Church execut
 
 ## Purpose and outcomes
 
-Create one secure digital operating platform for the denomination across four stated countries, about 25 circuits and 175 branches. It must support church administration and member self-service without weakening local branch governance. The first outcome is a member being registered by an authorized branch administrator, approved by permitted leadership, invited to an account, and able to see only their own information.
+Create one secure digital operating platform for the denomination across four stated countries, about 25 circuits and 175 branches. It must support church administration and member self-service without weakening local branch governance. All staff and member registration happens at branches; nobody is invited. The first outcome is a member being registered by an authorized branch administrator, approved by permitted leadership, privately establishing credentials at the branch and seeing only their own information.
 
 ## Users
 

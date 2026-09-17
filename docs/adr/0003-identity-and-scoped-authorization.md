@@ -8,7 +8,7 @@ Members cannot self-register as official Church members. Staff authority depends
 
 ## Decision
 
-Use ASP.NET Core Identity initially for accounts and separate `ApplicationUser` from `Member`, linked by verified `MemberUserLink`. Invite users after governance eligibility. Roles bundle permissions; dated assignments scope permissions to an organizational unit. Every resource check also evaluates record restrictions. Privileged accounts require MFA. Public registration never creates a member.
+Use ASP.NET Core Identity initially for accounts and separate `ApplicationUser` from `Member`, linked by verified `MemberUserLink`. All staff and member registrations are branch-led and in person, with no invitations; see [ADR 0005](0005-branch-led-registration.md). Roles bundle permissions; dated assignments scope permissions to an organizational unit. Every resource check also evaluates record restrictions. Privileged accounts require MFA. Public self-registration never creates a member.
 
 ## Alternatives considered
 

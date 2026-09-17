@@ -14,7 +14,7 @@ A new, web-first church management platform for one denomination. South Africa i
 | `TheChg.Worker` | Out-of-process jobs, messaging and payment follow-up |
 | `TheChg.*.Tests` | Unit and architecture tests |
 
-The current code is a foundation, **not** a functioning church management system. The South Africa organization model, inactive-by-default staff accounts, internal invitation/credential enrollment, persisted dated grants and fail-closed scoped authorization are implemented. A staff sign-in form and one protected read-only branch API exist, but there is **no public registration or invitation activation route, grant administration, member management, giving, payment, notification or reporting feature** yet. Organization administration remains closed.
+The current code is a foundation, **not** a functioning church management system. The South Africa organization model, inactive-by-default accounts, branch-captured pending account requests, persisted dated grants and fail-closed scoped authorization are implemented. A staff sign-in form, protected read-only branch API and scoped account-capture API exist. Branch capture does **not** activate a login, create official membership or grant staff access. There is no public self-registration, invitation workflow, grant administration, completed member management, giving, payment, notification or reporting feature yet. Organization administration remains closed.
 
 ## Build
 

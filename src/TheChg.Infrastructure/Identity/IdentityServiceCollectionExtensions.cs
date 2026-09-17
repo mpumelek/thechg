@@ -16,7 +16,7 @@ public static class IdentityServiceCollectionExtensions
 
         services.AddDbContext<TheChgIdentityDbContext>(options => options.UseSqlServer(connectionString));
         services.AddSingleton(TimeProvider.System);
-        services.AddScoped<AccountInvitationService>();
+        services.AddScoped<TheChg.Application.Registration.IAccountRegistrationWriter, EfAccountRegistrationWriter>();
         services.AddIdentityCore<ApplicationUser>(options =>
             {
                 options.User.RequireUniqueEmail = true;

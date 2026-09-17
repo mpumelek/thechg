@@ -6,7 +6,7 @@ Status: Draft. Owners: UX lead and product owner. Validate with branch administr
 
 1. Branch administrator: find possible duplicate → register draft → validate fields → submit → see approval state and required correction.
 2. Approver: review submitted snapshot and history → approve/reject with reason → see next journey task.
-3. Member: accept invitation → establish MFA where required → view own profile, journey and giving → request controlled change.
+3. Member: register in person at branch → privately establish credentials after approval → establish MFA where required → view own profile, journey and giving → request controlled change.
 4. Branch finance: capture manual giving → see unsynced entries → sync → resolve rejected item → post batch → issue receipt.
 5. Pastoral practitioner: open assigned case → add note → delegate limited access → close/reopen with audit.
 

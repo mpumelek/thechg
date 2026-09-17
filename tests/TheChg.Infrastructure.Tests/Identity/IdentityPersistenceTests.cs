@@ -144,10 +144,13 @@ public sealed class IdentityPersistenceTests
         var tables = context.Model.GetEntityTypes()
             .Select(entity => (entity.GetTableName(), entity.GetSchema()))
             .ToArray();
-        Assert.All(tables.Where(table => table.Item1 != "Churches"),
+        Assert.All(tables.Where(table => table.Item1 is not ("Churches" or "OrganizationalUnits")),
             table => Assert.Equal("identity", table.Item2));
         Assert.Contains(tables, table => table.Item1 == "Churches" && table.Item2 == "organization");
+        Assert.Contains(tables, table => table.Item1 == "OrganizationalUnits" && table.Item2 == "organization");
         Assert.Contains(tables, table => table.Item1 == "Users");
+        Assert.Contains(tables, table => table.Item1 == "BranchAccountRegistrations");
+        Assert.DoesNotContain(tables, table => table.Item1 == "AccountInvitations");
         Assert.Contains(tables, table => table.Item1 == "Roles");
         Assert.Contains(tables, table => table.Item1 == "UserRoles");
     }

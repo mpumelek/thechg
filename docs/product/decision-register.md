@@ -19,9 +19,13 @@ Status: Open. Owner: Product owner. Each decision needs an owner, target date, e
 | DEC-013 | Pastoral case classifications and emergency-access authority | Pastoral leadership + security | Pastoral module |
 | DEC-014 | Children's participation, guardian consent and photo-publication policy | Safeguarding lead + legal | Youth/Sunday School |
 | DEC-015 | Data retention and deletion schedule by category/country | Information officer + legal | Privacy implementation |
+| DEC-016 | Who may approve branch-captured staff access, and what separation of duties applies? | Church leadership | Staff activation and role grants |
+| DEC-017 | How is the first branch registrar bootstrapped and how are credentials privately established at branches? | Church leadership + security + operations | Real account onboarding |
 
 Review this register at every phase gate. Decisions about architecture that are hard to reverse also require an [ADR](../adr/README.md).
 
 Scope input recorded 16 September 2026: the user named four countries, then clarified **build for South Africa only now; Mozambique next**. Eswatini/Swaziland and Zimbabwe remain future, unscheduled. No country-specific provider, legal position or go-live approval was supplied.
+
+Registration input recorded 17 September 2026: the user confirmed **all staff and member registrations happen at branches; nobody is invited**. The capture-and-pending implementation follows this direction. Approval and bootstrap authority remain open under DEC-016/017.
 
 Capacity input recorded 16 September 2026: approximately **10,000 members now and 10,000 expected in three years**, with **6,000 manual-plus-online giving transactions per month at launch**. Peak concurrent users, document volume, country distribution and peak transaction rate remain TBD; DEC-002 stays open until the product owner confirms sizing evidence.

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using TheChg.Infrastructure.Identity;
 
@@ -11,9 +12,11 @@ using TheChg.Infrastructure.Identity;
 namespace TheChg.Infrastructure.Identity.Migrations
 {
     [DbContext(typeof(TheChgIdentityDbContext))]
-    partial class TheChgIdentityDbContextModelSnapshot : ModelSnapshot
+    [Migration("20260917040600_BranchAccountRegistration")]
+    partial class BranchAccountRegistration
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

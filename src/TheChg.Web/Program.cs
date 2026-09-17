@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Options;
 using TheChg.Application.Authorization;
 using TheChg.Application.Organization;
+using TheChg.Application.Registration;
 using TheChg.Infrastructure.Authorization;
 using TheChg.Infrastructure.Identity;
 using TheChg.Infrastructure.Organization;
@@ -15,6 +16,13 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllersWithViews(options =>
     options.Filters.Add(new AutoValidateAntiforgeryTokenAttribute()));
+builder.Services.AddAntiforgery(options =>
+{
+    options.HeaderName = "X-CSRF-TOKEN";
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+    options.Cookie.SameSite = SameSiteMode.Strict;
+    options.Cookie.HttpOnly = true;
+});
 builder.Services.AddHealthChecks();
 var connectionString = builder.Configuration.GetConnectionString("ChurchDatabase")
     ?? throw new InvalidOperationException("ConnectionStrings:ChurchDatabase must be configured.");
@@ -23,6 +31,7 @@ builder.Services.AddIdentityPersistence(connectionString);
 builder.Services.AddAuthorizationPersistence(connectionString);
 builder.Services.AddScoped<ScopedAuthorizationEvaluator>();
 builder.Services.AddScoped<BranchDetailsService>();
+builder.Services.AddScoped<BranchAccountRegistrationService>();
 builder.Services.AddAuthentication(IdentityConstants.ApplicationScheme)
     .AddCookie(IdentityConstants.ApplicationScheme, options =>
     {

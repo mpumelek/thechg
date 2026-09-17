@@ -98,7 +98,7 @@ The provider-to-web connection is for verified webhooks. Browsers never assert t
 | Module | Owns |
 |---|---|
 | Organization | Denomination, countries, circuits, branches, configuration, leadership assignments |
-| Identity & Access | Accounts, role assignments, permissions, scope, invitations, devices |
+| Identity & Access | Accounts, branch-captured registration requests, role assignments, permissions, scope, devices |
 | Membership | Person/member profile, status, family links, transfer, history, change requests |
 | New Member Journey | Curriculum versions, enrolment, milestones, progress, completion |
 | Buddy | Eligibility, capacity, assignments, check-ins, tasks, reassignment |
@@ -487,7 +487,7 @@ For engagement, define configurable `EngagementModelVersion`, weighted factors, 
 Baseline controls:
 
 - MFA for privileged and finance users.
-- Invitation-based provisioning; no public official-member registration.
+- Branch-led, in-person staff and member registration; no invitations or public self-registration.
 - Secure password reset, lockout, session revocation, and device management.
 - Default-deny authorization and scope checks on every query and command.
 - TLS, secure cookies, HSTS, CSRF protection, output encoding, parameterized EF queries.
@@ -780,7 +780,7 @@ At four stated countries and roughly 175 branches, one database remains a propos
 13. Migrate existing circuits and branches into the organizational hierarchy.
 14. Add permission catalogue, role-permission mappings, and scoped assignments.
 15. Add resource-based authorization handlers and scope-query services.
-16. Separate `ApplicationUser` from `Member` and define secure account invitation.
+16. Separate `ApplicationUser` from `Member` and define branch-led, in-person account registration.
 17. Define member profile, application, status history, and branch-history tables.
 18. Implement draft registration and duplicate-detection workflow.
 19. Implement submission, approval, rejection, and resubmission transitions.
@@ -794,4 +794,4 @@ At four stated countries and roughly 175 branches, one database remains a propos
 27. Implement one payment adapter with signed-webhook and idempotency tests.
 28. Pilot offline contribution capture at one branch before a wider rollout.
 
-The first practical milestone should be **an authorized branch administrator registering a member, an authorized leader approving that member, an invitation being issued, and the member securely signing in to view only their own record**. That vertical slice proves the organizational hierarchy, identity separation, scoped permissions, approval state machine, audit trail, notifications, and portal boundary before the platform expands.
+The first practical milestone should be **an authorized branch administrator registering a member in person, an authorized leader approving that member, the member privately establishing credentials at the branch, and then securely signing in to view only their own record**. That vertical slice proves the organizational hierarchy, identity separation, scoped permissions, approval state machine, audit trail and portal boundary before the platform expands.

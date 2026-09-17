@@ -10,7 +10,7 @@ Collect timestamp, environment, correlation ID, affected branch/country, operati
 
 | Symptom | First checks | Safe action / escalation |
 |---|---|---|
-| Member cannot sign in | Account status, invitation expiry, MFA/session status | Use approved reset/invite; never share temporary password |
+| Member cannot sign in | Branch registration and approval status, account activation, MFA/session status | Use approved in-person recovery; never share or assign a password |
 | Approval stuck | Application state, assignment scope, outbox task age | Reassign through audited workflow; do not edit DB directly |
 | Offline queue stuck | Device status, network, client operation IDs, rejection reasons | Preserve/export pending queue; retry idempotently |
 | Missing receipt | Contribution posted? outbox/delivery attempt? | Retry message only; do not duplicate contribution |

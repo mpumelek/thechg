@@ -6,6 +6,8 @@ Status: Draft. Owner: Product owner. Policy approval: Church leadership; finance
 
 Actor: scoped branch administrator. Preconditions: assigned branch, required identity/contact data, duplicate search. Register as `Draft`; the member is not an active official member and cannot grant themself member access. Submit changes state to `PendingApproval`, freezes the submitted snapshot and creates a leadership task. An approver with `Member.Approve` for that scope approves or rejects with a reason. Rejected applications may be revised and resubmitted; the prior decision remains immutable. Approved applications start `PreActive` membership and the new-member journey. `Active` requires published curriculum completion or authorized exception. Suspension, reactivation and archiving are separate recorded transitions.
 
+All account requests, including staff, are captured in person at a branch. The current account-capture endpoint records a pending request only; it does not create a `Member`, activate login or grant a staff permission. No invitation or public self-registration is used. Private credential setup, duplicate review, staff approval and first-registrar bootstrap require separate approved workflows (DEC-016/017).
+
 Policy TBD: exactly which leadership roles may approve, quorum/second decision if any, duplicate resolution, minimum fields, exception authority, and appeal procedure. See [membership specification](../modules/membership.md).
 
 ## Branch transfer

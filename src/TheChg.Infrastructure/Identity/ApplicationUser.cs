@@ -28,13 +28,4 @@ public sealed class ApplicationUser : IdentityUser<Guid>
 
     public bool IsActive { get; private set; }
 
-    internal void ActivateAfterVerifiedInvitation()
-    {
-        if (ChurchId == Guid.Empty || string.IsNullOrWhiteSpace(NormalizedEmail))
-            throw new InvalidOperationException("An account needs a Church and verified email before activation.");
-
-        EmailConfirmed = true;
-        IsActive = true;
-        SecurityStamp = Guid.NewGuid().ToString("N");
-    }
 }

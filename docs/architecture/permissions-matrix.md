@@ -11,6 +11,7 @@ Access requires an active account, permission grant, matching `ChurchId`, a targ
 | `Organization.View` | Yes | Yes | Yes | Yes | Public subset | Internal fields filtered |
 | `Organization.Manage` | Yes | Configurable | Configurable | No | No | Cannot grant wider scope than own |
 | `Member.Create` | Configurable | Configurable | Configurable | Yes | No | Branch administrator only by policy |
+| `Staff.Register` | Configurable | Configurable | Configurable | Configurable | No | Capture pending branch request only; never grants or activates staff access |
 | `Member.Approve` | Configurable | Configurable | Configurable | Configurable | No | Submitter cannot self-approve if policy requires separation; TBD |
 | `Member.View` | Yes | Yes | Yes | Yes | Own | Protected fields separate |
 | `Member.Edit` | Yes | Yes | Configurable | Configurable | Request only | Controlled fields require change request |
